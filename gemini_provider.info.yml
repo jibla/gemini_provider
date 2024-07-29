@@ -1,0 +1,8 @@
+name: 'Gemini Provider'
+type: module
+description: 'Gemini provider for AI module.'
+package: AI Providers
+core_version_requirement: ^10 || ^11
+dependencies:
+  - ai:ai
+  - key:key
