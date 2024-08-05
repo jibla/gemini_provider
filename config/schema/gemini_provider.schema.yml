@@ -1,0 +1,7 @@
+gemini_provider.settings:
+  type: mapping
+  label: 'Gemini Provider Settings'
+  mapping:
+    api_key:
+      type: string
+      label: 'The API key for Gemini API.'

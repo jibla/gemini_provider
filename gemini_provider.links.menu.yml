@@ -1,0 +1,6 @@
+gemini_provider.gemini_config:
+  title: Gemini Authentication
+  description: Setup Google Gemini.
+  route_name: gemini_provider.gemini_config
+  parent: ai.admin_providers
+  weight: 10
