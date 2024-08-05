@@ -85,13 +85,6 @@ final class GeminiConfigForm extends ConfigFormBase {
   /**
    * {@inheritdoc}
    */
-  public function validateForm(array &$form, FormStateInterface $form_state): void {
-    parent::validateForm($form, $form_state);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function submitForm(array &$form, FormStateInterface $form_state): void {
     $this->config('gemini_provider.settings')
       ->set('api_key', $form_state->getValue('api_key'))

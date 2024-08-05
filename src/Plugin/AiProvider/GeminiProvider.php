@@ -11,7 +11,6 @@ use Drupal\ai\OperationType\Chat\ChatMessage;
 use Drupal\ai\OperationType\Chat\ChatOutput;
 use Drupal\Core\Config\ImmutableConfig;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
-use Gemini\Client;
 use Symfony\Component\Yaml\Yaml;
 
 /**
@@ -26,7 +25,7 @@ class GeminiProvider extends AiProviderClientBase implements ChatInterface {
   /**
    * The Gemini Client.
    *
-   * @var Client|null
+   * @var \Gemini\Client|null
    */
   protected $client;
 
@@ -40,7 +39,7 @@ class GeminiProvider extends AiProviderClientBase implements ChatInterface {
   /**
    * Run moderation call, before a normal call.
    *
-   * @var boolean
+   * @var bool
    */
   protected bool $moderation = TRUE;
 
@@ -86,7 +85,7 @@ class GeminiProvider extends AiProviderClientBase implements ChatInterface {
    * {@inheritdoc}
    */
   public function getSupportedOperationTypes(): array {
-    //TODO: We need to add other operation types here later.
+    // @todo We need to add other operation types here later.
     return ['chat'];
   }
 
@@ -147,10 +146,10 @@ class GeminiProvider extends AiProviderClientBase implements ChatInterface {
     }
 
     $payload = ([
-        'model' => $model_id,
-        'messages' => $chat_input,
-      ] + $this->configuration);
-    
+      'model' => $model_id,
+      'messages' => $chat_input,
+    ] + $this->configuration);
+
     if (!isset($payload['system']) && $system_prompt) {
       $payload['system'] = $system_prompt;
     }
