@@ -1,30 +1,31 @@
-## INTRODUCTION
+## Gemini Provider
 
-The Gemini Provider module is a DESCRIBE_THE_MODULE_HERE.
+This module serves as a [Google Gemini](https://ai.google.dev/gemini-api/docs)
+provider for the [Drupal AI](https://www.drupal.org/project/ai) module.
 
-The primary use case for this module is:
+By installing and enabling this module, you can seamlessly integrate Google's
+Gemini API through the [Drupal AI](https://www.drupal.org/project/ai) module's
+abstraction layer.
 
-- Use case #1
-- Use case #2
-- Use case #3
+### Features
 
-## REQUIREMENTS
+- **Chat Integration**: Implement ChatInterface (text to text).
+- **Configuration**: Provides a configuration form for Gemini authentication.
+- **Plugin Implementation**: Offers a plugin implementation for the Drupal AI
+  module.
 
-DESCRIBE_MODULE_DEPENDENCIES_HERE
+As Google's Gemini is multimodal thing, we need to implement other interfaces
+too
+(text to speech, embeddings etc.)
 
-## INSTALLATION
+## Requirements
 
-Install as you would normally install a contributed Drupal module.
-See: https://www.drupal.org/node/895232 for further information.
+To use this module, the following dependencies are required:
 
-## CONFIGURATION
-- Configuration step #1
-- Configuration step #2
-- Configuration step #3
+- [Drupal AI](https://www.drupal.org/project/ai)
+- [Drupal Key](https://www.drupal.org/project/key)
+- [Google Gemini PHP Client](https://github.com/google-gemini-php/client)
 
-## MAINTAINERS
+## Maintainers
 
-Current maintainers for Drupal 10:
-
-- FIRST_NAME LAST_NAME (NICKNAME) - https://www.drupal.org/u/NICKNAME
-
+- Giorgi Jibladze (jibla) - https://www.drupal.org/u/jibla
