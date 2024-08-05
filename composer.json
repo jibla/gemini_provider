@@ -1,0 +1,8 @@
+{
+    "name": "drupal/gemini_provider",
+    "description": "Gemini provider for AI module.",
+    "type": "drupal-module",
+    "require": {
+        "google-gemini-php/client": "^1.0"
+    }
+}
