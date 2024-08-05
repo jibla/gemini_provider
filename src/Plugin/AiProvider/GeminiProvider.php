@@ -150,12 +150,13 @@ class GeminiProvider extends AiProviderClientBase implements ChatInterface {
         'model' => $model_id,
         'messages' => $chat_input,
       ] + $this->configuration);
+    
     if (!isset($payload['system']) && $system_prompt) {
       $payload['system'] = $system_prompt;
     }
 
     $response = $this->client->generativeModel($payload['model'])
-      ->generateContent($payload['messages'][0]['content']);
+      ->generateContent($payload['system'] . "\n" . $payload['messages'][0]['content']);
 
     $text = '';
     if (!empty($response->parts())) {

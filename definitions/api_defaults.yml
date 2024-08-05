@@ -12,23 +12,7 @@ chat:
     default: ''
     required: true
   configuration:
-    max_tokens:
-      label: 'Max Tokens'
-      description: 'The maximum number of tokens that can be generated in the chat completion.'
-      type: 'integer'
-      default: 1024
-      required: false
-    temperature:
-      label: 'Temperature'
-      description: 'Sampling temperature 0-1. Higher values mean more random output.'
-      type: 'float'
-      default: ''
-      required: false
-      constraints:
-        min: 0
-        max: 1
-        step: 0.1
-    top_p:
+    topP:
       label: 'Top P'
       description: 'An alternative to sampling with temperature, called nucleus sampling.'
       type: 'float'
@@ -38,7 +22,7 @@ chat:
         min: 0
         max: 1
         step: 0.1
-    top_k:
+    topK:
       label: 'Top K'
       description: 'Used to remove "long tail" low probability responses. '
       type: 'float'
@@ -48,3 +32,43 @@ chat:
         min: 0
         max: 1
         step: 0.1
+    temperature:
+      label: 'Temperature'
+      description: 'Sampling temperature 0-1. Higher values mean more random output.'
+      type: 'float'
+      default: ''
+      required: false
+      constraints:
+        min: 0
+        max: 2
+        step: 0.1
+    maxOutputTokens:
+      label: 'Max Tokens'
+      description: 'The maximum number of tokens to include in a response candidate'
+      type: 'integer'
+      default: 1024
+      required: false
+    candidateCount:
+      label: 'Candidate Count'
+      description: 'Number of generated responses to return'
+      type: 'integer'
+      default: 1
+      required: false
+    responseSchema:
+      label: 'Response Schema'
+      description: 'Output schema of the generated candidate text. Schemas must be a subset of the OpenAPI schema and can be objects, primitives or arrays. If set, compatible response mime type must also be set.'
+      type: 'string'
+      default: 'string'
+      required: false
+    responseMimeType:
+      label: 'Response MimeType'
+      description: 'MIME type of the generated candidate text. Supported ones are text/plain and application/json.'
+      type: 'string'
+      default: 'text/plain'
+      required: false
+    stopSequences:
+      label: 'Stop Sequences'
+      description: 'The set of character sequences (up to 5) that will stop output generation'
+      type: 'string'
+      default: ''
+      required: false
