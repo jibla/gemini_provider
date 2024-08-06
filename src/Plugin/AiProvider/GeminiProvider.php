@@ -11,6 +11,9 @@ use Drupal\ai\OperationType\Chat\ChatMessage;
 use Drupal\ai\OperationType\Chat\ChatOutput;
 use Drupal\Core\Config\ImmutableConfig;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Gemini\Data\Content;
+use Gemini\Data\GenerationConfig;
+use Gemini\Enums\Role;
 use Symfony\Component\Yaml\Yaml;
 
 /**
@@ -128,34 +131,27 @@ class GeminiProvider extends AiProviderClientBase implements ChatInterface {
   public function chat(array|string|ChatInput $input, string $model_id, array $tags = []): ChatOutput {
     $this->loadClient();
 
+    // prepare inputs for gemini
     $chat_input = $input;
-    $system_prompt = '';
     if ($input instanceof ChatInput) {
       $chat_input = [];
       foreach ($input->getMessages() as $message) {
-        if ($message->getRole() == 'system') {
-          $system_prompt = $message->getText();
-          continue;
+        if (!in_array($message->getRole(), ['model', 'user'])) {
+          $error_message = sprintf('The role %s, is not supported by Gemini Provider.', $message->getRole());
+          throw new AiResponseErrorException($error_message);
         }
-
-        $chat_input[] = [
-          'role' => $message->getRole(),
-          'content' => $message->getText(),
-        ];
+        $role = Role::from($message->getRole());
+        $chat_input[] = Content::parse($message->getText(), $role);
       }
     }
 
-    $payload = ([
-      'model' => $model_id,
-      'messages' => $chat_input,
-    ] + $this->configuration);
+    // set configuration
+    $config = new GenerationConfig(...$this->getConfiguration());
 
-    if (!isset($payload['system']) && $system_prompt) {
-      $payload['system'] = $system_prompt;
-    }
-
-    $response = $this->client->generativeModel($payload['model'])
-      ->generateContent($payload['system'] . "\n" . $payload['messages'][0]['content']);
+    // generate response
+    $response = $this->client->generativeModel($model_id)
+      ->withGenerationConfig($config)
+      ->generateContent(...$chat_input);
 
     $text = '';
     if (!empty($response->parts())) {
@@ -187,7 +183,7 @@ class GeminiProvider extends AiProviderClientBase implements ChatInterface {
    * @param string $api_key
    *   If the API key should be hot swapped.
    *
-   * @return Client
+   * @return \Gemini\Client
    *   The Gemini client.
    */
   public function getClient(string $api_key = '') {
@@ -224,6 +220,19 @@ class GeminiProvider extends AiProviderClientBase implements ChatInterface {
   protected function loadApiKey(): string {
     return $this->keyRepository->getKey($this->getConfig()->get('api_key'))
       ->getKeyValue();
+  }
+
+  public function setConfiguration(array $configuration): void {
+    parent::setConfiguration($configuration);
+
+    // normalize config for Gemini
+    $this->configuration['stopSequences'] = isset($this->configuration['stopSequences'])
+      ? explode(',', $this->configuration['stopSequences'])
+      : [];
+
+    // unset formatting for now TODO: need to implement later
+    unset ($this->configuration['responseSchema']);
+    unset ($this->configuration['responseMimeType']);
   }
 
 }
