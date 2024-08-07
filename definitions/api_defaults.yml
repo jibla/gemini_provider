@@ -12,12 +12,6 @@ chat:
     default: ''
     required: true
   configuration:
-    candidateCount:
-      label: 'Candidate Count'
-      description: 'Number of generated responses to return'
-      type: 'integer'
-      default: 1
-      required: false
     stopSequences:
       label: 'Stop Sequences'
       description: 'The set of character sequences (up to 5) that will stop output generation'
