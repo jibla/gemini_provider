@@ -51,7 +51,7 @@ class GeminiProvider extends AiProviderClientBase implements ChatInterface {
    *
    * @var Content
    */
-  protected Content|null $systemMessage;
+  protected Content|null $systemMessage = NULL;
 
   /**
    * {@inheritdoc}
