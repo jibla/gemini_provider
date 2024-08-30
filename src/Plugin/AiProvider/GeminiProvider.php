@@ -47,9 +47,18 @@ class GeminiProvider extends AiProviderClientBase implements ChatInterface {
   protected bool $moderation = TRUE;
 
   /**
-   * {@inheritdoc}
+   * If system message is presented, we store here.
+   *
+   * @var Content
    */
-  public function getConfiguredModels(string $operation_type = NULL): array {
+  protected Content|null $systemMessage;
+
+  /**
+   * {@inheritdoc}
+   * @param string|null $operation_type
+   * @param array $capabilities
+   */
+  public function getConfiguredModels(string $operation_type = NULL, array $capabilities = []): array {
     $this->loadClient();
 
     $supported_models = [];
@@ -71,8 +80,10 @@ class GeminiProvider extends AiProviderClientBase implements ChatInterface {
 
   /**
    * {@inheritdoc}
+   * @param string|null $operation_type
+   * @param array $capabilities
    */
-  public function isUsable(string $operation_type = NULL): bool {
+  public function isUsable(string $operation_type = NULL, array $capabilities = []): bool {
     if (!$this->getConfig()->get('api_key')) {
       return FALSE;
     }
@@ -135,6 +146,11 @@ class GeminiProvider extends AiProviderClientBase implements ChatInterface {
     $chat_input = $input;
     if ($input instanceof ChatInput) {
       $chat_input = [];
+
+      if ($this->systemMessage) {
+        $chat_input[] = $this->systemMessage;
+      }
+
       foreach ($input->getMessages() as $message) {
         if (!in_array($message->getRole(), ['model', 'user'])) {
           $error_message = sprintf('The role %s, is not supported by Gemini Provider.', $message->getRole());
@@ -233,6 +249,13 @@ class GeminiProvider extends AiProviderClientBase implements ChatInterface {
     // unset formatting for now TODO: need to implement later
     unset ($this->configuration['responseSchema']);
     unset ($this->configuration['responseMimeType']);
+  }
+
+  public function setChatSystemRole(string|null $message): void {
+    if (!empty($message)) {
+      $role = Role::from('model');
+      $this->systemMessage = Content::parse($message, $role);
+    }
   }
 
 }
