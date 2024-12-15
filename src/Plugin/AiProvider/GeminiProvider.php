@@ -148,10 +148,18 @@ class GeminiProvider extends AiProviderClientBase implements ChatInterface {
       $chat_input = [];
 
       if ($this->systemMessage) {
-        $chat_input[] = $this->systemMessage;
+        $chat_input[] = [
+          'role' => 'model',
+          'content' => $this->chatSystemRole,
+        ];
       }
 
       foreach ($input->getMessages() as $message) {
+
+        if ($message->getRole() == 'system') {
+          $message->setRole('model');
+        }
+
         if (!in_array($message->getRole(), ['model', 'user'])) {
           $error_message = sprintf('The role %s, is not supported by Gemini Provider.', $message->getRole());
           throw new AiResponseErrorException($error_message);
